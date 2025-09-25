@@ -1,0 +1,7 @@
+/* Estilos básicos para todos os personagens */
+.w-screen {
+  width: 100vw;
+}
+.flex {
+  display: flex;
+}

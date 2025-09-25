@@ -1,0 +1,10 @@
+/* Estilos básicos para o carrousel */
+.flex {
+  display: flex;
+}
+.items-center {
+  align-items: center;
+}
+.mb-12 {
+  margin-bottom: 3rem;
+}
