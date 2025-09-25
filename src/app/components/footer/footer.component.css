@@ -1,0 +1,9 @@
+.bg-stone-800 {
+  background: #222;
+}
+.text-white {
+  color: #fff;
+}
+.hover\:text-orange-500:hover {
+  color: #d32f2f;
+}
