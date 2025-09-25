@@ -1,21 +1,12 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from './header.component';
-import { FooterComponent } from './footer.component';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, RouterOutlet],
-  template: `
-    <app-header></app-header>
-    <main>
-      <router-outlet></router-outlet>
-    </main>
-    <app-footer></app-footer>
-  `,
-  styles: [],
+  imports: [CommonModule, RouterOutlet],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
 })
-export class AppComponent {
-  title = 'crud-marvel-app';
-}
+export class AppComponent {}

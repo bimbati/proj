@@ -1,4 +1,12 @@
 <div class="w-screen flex flex-col items-center">
   <h2>Todos os Personagens</h2>
-  <!-- Lista de personagens -->
+  <div *ngIf="loading()" class="text-center">Carregando personagens...</div>
+  <div *ngIf="error()" class="text-red-500">{{ error() }}</div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+    <div *ngFor="let character of characters()" class="bg-white rounded shadow p-2 flex flex-col items-center">
+      <img [src]="character.thumbnail.path + '.' + character.thumbnail.extension" alt="{{ character.name }}" class="w-24 h-24 object-cover rounded-full mb-2" />
+      <div class="font-bold">{{ character.name }}</div>
+      <div class="text-xs text-gray-500">{{ character.description || 'Sem descrição.' }}</div>
+    </div>
+  </div>
 </div>
