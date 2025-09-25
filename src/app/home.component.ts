@@ -5,9 +5,14 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   template: `
-    <p>
-      home works!
-    </p>
+    <section class="home">
+      <h2>Bem-vindo ao CRUD Marvel App!</h2>
+      <p>Este é o projeto inicial para gerenciar personagens, quadrinhos e séries da Marvel.</p>
+      <nav>
+        <a routerLink="/">Home</a> |
+        <a routerLink="/about">Sobre</a>
+      </nav>
+    </section>
   `,
   styles: ``
 })

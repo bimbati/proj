@@ -1,21 +1,20 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-not-found',
+  selector: 'app-header',
   standalone: true,
   imports: [],
   template: `
-    <section class="not-found">
-      <h2>404 - Página não encontrada</h2>
-      <p>A página que você tentou acessar não existe.</p>
+    <header class="header">
+      <h1>CRUD Marvel App</h1>
       <nav>
         <a routerLink="/">Home</a> |
         <a routerLink="/about">Sobre</a>
       </nav>
-    </section>
+    </header>
   `,
   styles: ``
 })
-export class NotFoundComponent {
+export class HeaderComponent {
 
 }
