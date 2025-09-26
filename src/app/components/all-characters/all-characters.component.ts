@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UppercaseNamePipe } from '../../shared/pipes/uppercase-name.pipe';
@@ -12,16 +13,20 @@ import { Character } from '../../shared/models/character.module';
   templateUrl: './all-characters.component.html',
   styleUrl: './all-characters.component.css',
   // providers: [ApiRequestService],
-  imports: [CommonModule, RouterLink, UppercaseNamePipe, HighlightCardDirective],
+  imports: [CommonModule, RouterLink, UppercaseNamePipe, HighlightCardDirective, ReactiveFormsModule],
 })
 export class AllCharactersComponent implements OnInit {
   characters = signal<Character[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
   page = signal<number>(0);
-  filter = signal<string>('');
+  filterControl = new FormControl('');
 
-  constructor(private api: ApiRequestService) {}
+  constructor(private api: ApiRequestService) {
+    this.filterControl.valueChanges.subscribe((value: string | null) => {
+      this.filterCharacters(value ?? '');
+    });
+  }
 
   ngOnInit(): void {
     this.fetchCharacters();
@@ -55,26 +60,26 @@ export class AllCharactersComponent implements OnInit {
     }
   }
 
-  setFilter(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = input?.value ?? '';
-    this.filter.set(value);
-    if (value.trim().length > 0) {
-      this.loading.set(true);
-      this.error.set(null);
-      this.api.getCharacterByName(value).subscribe({
-        next: (response: any) => {
-          const results = response?.data?.results as Character[];
-          this.characters.set(results || []);
-          this.loading.set(false);
-        },
-        error: (err) => {
-          this.error.set('Erro ao buscar personagens.');
-          this.loading.set(false);
-        },
-      });
-    } else {
-      this.fetchCharacters(this.page() * 100);
+  filterCharacters(value: string): void {
+    const pageValue = typeof this.page === 'function' ? this.page() : 0;
+    if (!value || value.trim().length === 0) {
+      // Campo vazio: busca a lista completa da página
+      this.fetchCharacters(pageValue * 100);
+      return;
     }
+    // Campo preenchido: busca todos da página e filtra
+    this.loading.set(true);
+    this.error.set(null);
+    this.api.getCharactersByName(value).subscribe({
+      next: (response: any) => {
+        const results = response?.data?.results as Character[];
+        this.characters.set(results || []);
+        this.loading.set(false);
+      },
+      error: (err: any) => {
+        this.error.set('Erro ao buscar personagens.');
+        this.loading.set(false);
+      },
+    });
   }
 }

@@ -64,30 +64,19 @@ export class AllSeriesComponent implements OnInit {
   }
 
   setFilter(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const value = input?.value ?? '';
-  this.filter.set(value);
-  if (value.trim().length > 0) {
+    const input = event.target as HTMLInputElement;
+    const value = input?.value ?? '';
+    this.filter.set(value);
+    if (value.trim().length > 0) {
       this.loading.set(true);
       this.error.set(null);
-      // Busca por parte do título
-      const timestamp = 1;
-      const hash = CryptoJS.MD5(timestamp + this.api['privateKey'] + this.api['publicKey']).toString();
-      const url = new URL(`https://gateway.marvel.com/v1/public/series?titleStartsWith=${value}`);
-      this.api['http'].get(url.toString(), {
-        params: {
-          apikey: this.api['publicKey'],
-          ts: timestamp,
-          hash: hash,
-        },
-        headers: {},
-      }).subscribe({
+      this.api.getSeriesByTitle(value).subscribe({
         next: (response: any) => {
           const results = response?.data?.results as Serie[];
           this.series.set(results || []);
           this.loading.set(false);
         },
-        error: (err) => {
+        error: (err: any) => {
           this.error.set('Erro ao buscar séries.');
           this.loading.set(false);
         },

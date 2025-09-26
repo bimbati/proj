@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiRequestService } from '../../shared/services/api-request.service';
 import { Character } from '../../shared/models/character.module';
@@ -8,26 +9,29 @@ import { Character } from '../../shared/models/character.module';
   standalone: true,
   templateUrl: './search-character.component.html',
   styleUrl: './search-character.component.css',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
 })
 export class SearchCharacterComponent {
-  ngOnInit(): void {
-    if (this.searchTerm()) {
-      this.search();
-    }
-  }
-  searchTerm = signal<string>('');
+  searchControl = new FormControl('');
   character = signal<Character | null>(null);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
 
   constructor(private api: ApiRequestService) {}
 
+  ngOnInit(): void {
+    // Opcional: buscar ao digitar
+    // this.searchControl.valueChanges.subscribe(value => {
+    //   if (value) this.search();
+    // });
+  }
+
   search(): void {
-    if (!this.searchTerm()) return;
+    const name = this.searchControl.value?.trim();
+    if (!name) return;
     this.loading.set(true);
     this.error.set(null);
-    this.api.getCharacterByName(this.searchTerm()).subscribe({
+    this.api.getCharacterByName(name).subscribe({
       next: (response: any) => {
         const result = response?.data?.results?.[0] as Character;
         this.character.set(result || null);
@@ -40,8 +44,5 @@ export class SearchCharacterComponent {
       },
     });
   }
-  setSearchTerm(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm.set(input?.value ?? '');
-  }
+
 }
