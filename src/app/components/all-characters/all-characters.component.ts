@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ApiRequestService } from '../../shared/services/api-request.service';
 import { Character } from '../../shared/models/character.module';
 
@@ -9,7 +10,7 @@ import { Character } from '../../shared/models/character.module';
   templateUrl: './all-characters.component.html',
   styleUrl: './all-characters.component.css',
   providers: [ApiRequestService],
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
 })
 export class AllCharactersComponent implements OnInit {
   characters = signal<Character[]>([]);

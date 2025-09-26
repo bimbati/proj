@@ -19,7 +19,7 @@ export const routes: Routes = [
       { path: 'all-characters', component: AllCharactersComponent },
       { path: 'all-comics', component: AllComicsComponent },
       { path: 'all-series', component: AllSeriesComponent },
-      { path: 'character', component: CharacterComponent },
+  { path: 'character/:id', component: CharacterComponent },
       { path: 'comics', component: ComicsComponent },
       { path: 'series', component: SeriesComponent },
       { path: 'search-character', component: SearchCharacterComponent },

@@ -3,12 +3,12 @@
   <input type="text" placeholder="Filtrar por nome..." class="mb-4 px-4 py-2 rounded w-full max-w-xs bg-stone-700 text-white" (input)="setFilter($event)" />
   <div *ngIf="loading()" class="text-center text-white text-lg">Carregando personagens...</div>
   <div *ngIf="error()" class="text-red-500 text-lg">{{ error() }}</div>
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 w-full max-w-7xl px-2 md:px-6">
-  <div *ngFor="let character of characters()" class="bg-stone-900 rounded-lg shadow-lg p-4 flex flex-col items-center border border-stone-700 hover:scale-105 transition-transform duration-200">
-      <img [src]="character.thumbnail.path + '.' + character.thumbnail.extension" alt="{{ character.name }}" class="w-24 h-24 object-cover rounded-full mb-3 border-4 border-orange-500 shadow" />
-      <div class="font-Bungee text-orange-500 text-lg text-center mb-1">{{ character.name }}</div>
-      <div class="text-xs text-gray-300 text-center">{{ character.description || 'Sem descrição.' }}</div>
-    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 w-full max-w-7xl px-2 md:px-6">
+      <a *ngFor="let character of characters()" [routerLink]="['/character', character.id]" class="bg-stone-900 rounded-lg shadow-lg p-4 flex flex-col items-center border border-stone-700 hover:scale-105 transition-transform duration-200 cursor-pointer">
+        <img [src]="character.thumbnail.path + '.' + character.thumbnail.extension" alt="{{ character.name }}" class="w-24 h-24 object-cover rounded-full mb-3 border-4 border-orange-500 shadow" />
+        <div class="font-Bungee text-orange-500 text-lg text-center mb-1">{{ character.name }}</div>
+        <div class="text-xs text-gray-300 text-center">{{ character.description || 'Sem descrição.' }}</div>
+      </a>
   </div>
   <div class="flex justify-center items-center gap-4 mt-8">
     <button (click)="prevPage()" [disabled]="page() === 0" class="px-4 py-2 rounded bg-orange-500 text-white font-bold disabled:opacity-50">Anterior</button>

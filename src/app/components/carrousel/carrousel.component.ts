@@ -1,19 +1,18 @@
+import { Component, OnInit, signal } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
 import { CharacterComponent } from '../character/character.component';
 import { ApiRequestService } from '../../shared/services/api-request.service';
-import { SearchCharacterComponent } from '../search-character/search-character.component';
 import { RouterLinkWithHref } from '@angular/router';
 import { Character } from '../../shared/models/character.module';
 
 @Component({
   selector: 'app-carrousel',
   standalone: true,
-  imports: [NgFor, CharacterComponent, SearchCharacterComponent, RouterLinkWithHref, NgIf],
+  imports: [NgFor, CharacterComponent, RouterLinkWithHref, NgIf],
   templateUrl: './carrousel.component.html',
   styleUrl: './carrousel.component.css',
 })
-export class CarrouselComponent {
+export class CarrouselComponent implements OnInit {
   ngOnInit() {
     this.getCharactersAndComics();
   }
@@ -23,17 +22,17 @@ export class CarrouselComponent {
   characters = signal<Character[]>([]);
   charactersComics = signal<any[]>([]);
   charactersSeries = signal<any[]>([]);
-  private requestService = inject(ApiRequestService);
+  constructor(private requestService: ApiRequestService) {}
 
   private getCharacters(id: number) {
-    this.requestService.getComic(id.toString()).subscribe((resp) => {
+    this.requestService.getComic(id.toString()).subscribe((resp: any) => {
       this.apiResp = resp;
       const results = this.apiResp.data.results;
-      this.characters.update((value) => [...value, results[0]]);
+      this.characters.update((value: any[]) => [...value, results[0]]);
       const comics = results[0].comics.items;
-      this.charactersComics.update((value) => [...value, comics]);
+      this.charactersComics.update((value: any[]) => [...value, comics]);
       const series = results[0].series.items;
-      this.charactersSeries.update((value) => [...value, series]);
+      this.charactersSeries.update((value: any[]) => [...value, series]);
     });
   }
   private getCharactersAndComics() {
@@ -60,7 +59,7 @@ export class CarrouselComponent {
   }
 
   private getCharacterByName(name: string) {
-    this.requestService.getCharacterByName(name).subscribe((resp) => {
+    this.requestService.getCharacterByName(name).subscribe((resp: any) => {
       this.apiResp = resp;
       this.characterSearched.set(this.apiResp.data.results[0]);
       const comics = this.apiResp.data.results[0].comics.items;

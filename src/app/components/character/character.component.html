@@ -1,35 +1,38 @@
 <div class="w-full min-h-screen flex flex-col items-center bg-gradient-to-b from-stone-900 to-stone-800 py-8">
   <h2 class="text-3xl font-Bungee text-orange-500 mb-6">Detalhes do Personagem</h2>
   <div class="w-full max-w-3xl bg-stone-900 rounded-lg shadow-lg p-8 border border-stone-700 flex flex-col items-center">
-    <ng-container *ngIf="character; else searchBlock">
+  <ng-container *ngIf="character">
       <img [src]="character.thumbnail.path + '.' + character.thumbnail.extension" alt="{{ character.name }}" class="w-24 h-24 object-cover rounded-full mb-3 border-4 border-orange-500 shadow" />
       <div class="font-Bungee text-orange-500 text-lg text-center mb-1">{{ character.name }}</div>
-      <div *ngIf="showDescription" class="text-xs text-gray-300 text-center">{{ character.description || 'Sem descrição.' }}</div>
-      <div *ngIf="showComicsAndSeries">
-        <div class="mt-4">
-          <div class="font-bold text-orange-500">Comics:</div>
-          <ul class="text-xs text-gray-300">
-            <li *ngFor="let comic of characterComics">{{ comic.name }}</li>
-          </ul>
+      <div class="text-xs text-gray-300 text-center">{{ character.description || 'Sem descrição.' }}</div>
+      <div class="mt-4 w-full">
+        <div class="font-bold text-orange-500 mb-2">Comics:</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <ng-container *ngFor="let comic of comics">
+            <div class="bg-stone-800 rounded-lg p-4 flex flex-col items-center border border-stone-700 shadow">
+              <img *ngIf="comic.thumbnail" [src]="comic.thumbnail.path + '.' + comic.thumbnail.extension" alt="{{ comic.title }}" class="w-20 h-20 object-cover rounded mb-2 border-2 border-orange-500" />
+              <div class="font-bold text-orange-400 text-center">{{ comic.title || comic.name }}</div>
+              <div class="text-xs text-gray-300 text-center mb-2">{{ comic.description || 'Sem descrição.' }}</div>
+              <a *ngIf="comic.urls?.length" [href]="comic.urls[0].url" target="_blank" class="text-xs text-blue-400 underline">Ver detalhes</a>
+            </div>
+          </ng-container>
         </div>
-        <div class="mt-2">
-          <div class="font-bold text-orange-500">Series:</div>
-          <ul class="text-xs text-gray-300">
-            <li *ngFor="let serie of characterSeries">{{ serie.name }}</li>
-          </ul>
+        <div *ngIf="comics.length === 0" class="text-xs text-gray-400 mt-2">Nenhum comic relacionado encontrado.</div>
+      </div>
+      <div class="mt-6 w-full">
+        <div class="font-bold text-orange-500 mb-2">Series:</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <ng-container *ngFor="let serie of series">
+            <div class="bg-stone-800 rounded-lg p-4 flex flex-col items-center border border-stone-700 shadow">
+              <img *ngIf="serie.thumbnail" [src]="serie.thumbnail.path + '.' + serie.thumbnail.extension" alt="{{ serie.title }}" class="w-20 h-20 object-cover rounded mb-2 border-2 border-orange-500" />
+              <div class="font-bold text-orange-400 text-center">{{ serie.title || serie.name }}</div>
+              <div class="text-xs text-gray-300 text-center mb-2">{{ serie.description || 'Sem descrição.' }}</div>
+              <a *ngIf="serie.urls?.length" [href]="serie.urls[0].url" target="_blank" class="text-xs text-blue-400 underline">Ver detalhes</a>
+            </div>
+          </ng-container>
         </div>
+        <div *ngIf="series.length === 0" class="text-xs text-gray-400 mt-2">Nenhuma série relacionada encontrada.</div>
       </div>
     </ng-container>
-    <ng-template #searchBlock>
-      <input type="text" placeholder="Nome do personagem..." class="mb-4 px-4 py-2 rounded w-full max-w-xs bg-stone-700 text-white" (input)="setCharacterId($event)" />
-      <button (click)="fetchCharacter()" class="px-4 py-2 rounded bg-orange-500 text-white font-bold mb-4">Buscar</button>
-      <div *ngIf="loading()" class="text-center text-white text-lg">Buscando...</div>
-      <div *ngIf="error()" class="text-red-500 text-lg">{{ error() }}</div>
-      <div *ngIf="characterSignal()" class="flex flex-col items-center mt-4">
-        <img [src]="characterSignal()?.thumbnail?.path + '.' + characterSignal()?.thumbnail?.extension" alt="{{ characterSignal()?.name }}" class="w-24 h-24 object-cover rounded-full mb-3 border-4 border-orange-500 shadow" />
-        <div class="font-Bungee text-orange-500 text-lg text-center mb-1">{{ characterSignal()?.name }}</div>
-        <div class="text-xs text-gray-300 text-center">{{ characterSignal()?.description || 'Sem descrição.' }}</div>
-      </div>
-    </ng-template>
   </div>
 </div>

@@ -93,4 +93,44 @@ export class ApiRequestService {
       headers: {},
     });
   }
+  getCharacterById(id: string) {
+    const timestamp = 1;
+    const hash = CryptoJS.MD5(timestamp + this.privateKey + this.publicKey).toString();
+    const url = new URL(`https://gateway.marvel.com/v1/public/characters/${id}`);
+    return this.http.get(url.toString(), {
+      params: {
+        apikey: this.publicKey,
+        ts: timestamp,
+        hash: hash,
+      },
+      headers: {},
+    });
+  }
+  getComicsByCharacter(characterId: string) {
+    const timestamp = 1;
+    const hash = CryptoJS.MD5(timestamp + this.privateKey + this.publicKey).toString();
+    const url = new URL(`https://gateway.marvel.com/v1/public/characters/${characterId}/comics`);
+    return this.http.get(url.toString(), {
+      params: {
+        apikey: this.publicKey,
+        ts: timestamp,
+        hash: hash,
+      },
+      headers: {},
+    });
+  }
+
+  getSeriesByCharacter(characterId: string) {
+    const timestamp = 1;
+    const hash = CryptoJS.MD5(timestamp + this.privateKey + this.publicKey).toString();
+    const url = new URL(`https://gateway.marvel.com/v1/public/characters/${characterId}/series`);
+    return this.http.get(url.toString(), {
+      params: {
+        apikey: this.publicKey,
+        ts: timestamp,
+        hash: hash,
+      },
+      headers: {},
+    });
+  }
 }
