@@ -14,6 +14,8 @@ import { Comic } from '../../../shared/models/comics.module';
   imports: [CommonModule, UppercaseNamePipe, HighlightCardDirective],
 })
 export class AllComicsComponent implements OnInit {
+  alphabet: string[] = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+  selectedLetter: string | null = null;
   comics = signal<Comic[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
@@ -58,22 +60,45 @@ export class AllComicsComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const value = input?.value ?? '';
     this.filter.set(value);
-    if (value.trim().length > 0) {
+    this.filterComics();
+  }
+
+  filterComics(): void {
+    // Se filtro por letra, busca na API
+    if (this.selectedLetter) {
       this.loading.set(true);
       this.error.set(null);
-      this.api.getComicsByTitle(value).subscribe({
+      this.api.getComicsByTitle(this.selectedLetter).subscribe({
         next: (response: any) => {
-          const results = response?.data?.results as Comic[];
-          this.comics.set(results || []);
+          let comicsList = (response?.data?.results || []).filter((c: any) => c.title && c.title[0]?.toUpperCase() === this.selectedLetter);
+          // Filtro por texto
+          const filterValue = this.filter().toLowerCase();
+          if (filterValue && filterValue.trim().length > 0) {
+            comicsList = comicsList.filter((c: any) => c.title.toLowerCase().includes(filterValue));
+          }
+          comicsList.sort((a: any, b: any) => a.title.localeCompare(b.title));
+          this.comics.set(comicsList);
           this.loading.set(false);
         },
-        error: (err: any) => {
-          this.error.set('Erro ao buscar quadrinhos.');
+        error: () => {
+          this.error.set('Erro ao buscar quadrinhos por letra.');
           this.loading.set(false);
-        },
+        }
       });
-    } else {
-      this.fetchComics(this.page() * 100);
+      return;
     }
+    // Filtro normal (sem letra)
+    let comicsList = [...this.comics()];
+    const filterValue = this.filter().toLowerCase();
+    if (filterValue && filterValue.trim().length > 0) {
+      comicsList = comicsList.filter((c: any) => c.title.toLowerCase().includes(filterValue));
+    }
+    comicsList.sort((a: any, b: any) => a.title.localeCompare(b.title));
+    this.comics.set(comicsList);
+  }
+
+  selectLetter(letter: string | null) {
+    this.selectedLetter = letter;
+    this.filterComics();
   }
 }

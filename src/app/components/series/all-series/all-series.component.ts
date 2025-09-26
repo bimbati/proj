@@ -23,6 +23,8 @@ interface Serie {
   imports: [CommonModule, UppercaseNamePipe, HighlightCardDirective],
 })
 export class AllSeriesComponent implements OnInit {
+  alphabet: string[] = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+  selectedLetter: string | null = null;
   series = signal<Serie[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
@@ -67,27 +69,45 @@ export class AllSeriesComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const value = input?.value ?? '';
     this.filter.set(value);
-    if (value.trim().length > 0) {
+    this.filterSeries();
+  }
+
+  filterSeries(): void {
+    // Se filtro por letra, busca na API
+    if (this.selectedLetter) {
       this.loading.set(true);
       this.error.set(null);
-      this.api.getSeriesByTitle(value).subscribe({
+      this.api.getSeriesByTitle(this.selectedLetter).subscribe({
         next: (response: any) => {
-          const results = response?.data?.results as Serie[];
-          this.series.set(results || []);
+          let seriesList = (response?.data?.results || []).filter((s: any) => s.title && s.title[0]?.toUpperCase() === this.selectedLetter);
+          // Filtro por texto
+          const filterValue = this.filter().toLowerCase();
+          if (filterValue && filterValue.trim().length > 0) {
+            seriesList = seriesList.filter((s: any) => s.title.toLowerCase().includes(filterValue));
+          }
+          seriesList.sort((a: any, b: any) => a.title.localeCompare(b.title));
+          this.series.set(seriesList);
           this.loading.set(false);
         },
-        error: (err: any) => {
-          this.error.set('Erro ao buscar séries.');
+        error: () => {
+          this.error.set('Erro ao buscar séries por letra.');
           this.loading.set(false);
-        },
+        }
       });
-    } else {
-      this.fetchSeries(this.page() * 100);
+      return;
     }
+    // Filtro normal (sem letra)
+    let seriesList = [...this.series()];
+    const filterValue = this.filter().toLowerCase();
+    if (filterValue && filterValue.trim().length > 0) {
+      seriesList = seriesList.filter((s: any) => s.title.toLowerCase().includes(filterValue));
+    }
+    seriesList.sort((a: any, b: any) => a.title.localeCompare(b.title));
+    this.series.set(seriesList);
   }
-  
-  get filteredSeries(): Serie[] {
-    const filter = this.filter().toLowerCase();
-    return this.series().filter(s => s.title.toLowerCase().includes(filter));
+
+  selectLetter(letter: string | null) {
+    this.selectedLetter = letter;
+    this.filterSeries();
   }
 }

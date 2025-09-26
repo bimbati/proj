@@ -1,5 +1,12 @@
 <div class="w-full min-h-screen flex flex-col items-center bg-gradient-to-b from-stone-900 to-stone-800 py-8">
   <h2 class="text-3xl font-Bungee text-orange-500 mb-6">Todos os Quadrinhos</h2>
+  <!-- Barra de letras do alfabeto -->
+  <div class="flex flex-wrap gap-1 mb-4">
+    <button *ngFor="let letter of alphabet" (click)="selectLetter(letter)" [class.bg-orange-500]="selectedLetter === letter" class="px-2 py-1 rounded text-white font-bold bg-stone-700 hover:bg-orange-500 transition-colors duration-150">
+      {{ letter }}
+    </button>
+    <button (click)="selectLetter(null)" [class.bg-orange-500]="!selectedLetter" class="px-2 py-1 rounded text-white font-bold bg-stone-700 hover:bg-orange-500 transition-colors duration-150">Todos</button>
+  </div>
   <input type="text" placeholder="Filtrar por título..." class="mb-4 px-4 py-2 rounded w-full max-w-xs bg-stone-700 text-white" (input)="setFilter($event)" />
   <div *ngIf="loading()" class="text-center text-white text-lg">Carregando quadrinhos...</div>
   <div *ngIf="error()" class="text-red-500 text-lg">{{ error() }}</div>
@@ -10,9 +17,11 @@
       <div class="text-xs text-gray-300 text-center">{{ comic.description || 'Sem descrição.' }}</div>
     </div>
   </div>
-  <div class="flex justify-center items-center gap-4 mt-8">
-    <button (click)="prevPage()" [disabled]="page() === 0" class="px-4 py-2 rounded bg-orange-500 text-white font-bold disabled:opacity-50">Anterior</button>
-    <span class="text-white">Página {{ page() + 1 }}</span>
-    <button (click)="nextPage()" class="px-4 py-2 rounded bg-orange-500 text-white font-bold">Próxima</button>
+  <!-- Barra de letras do alfabeto centralizada ao final -->
+  <div class="flex flex-wrap justify-center gap-1 mt-8">
+    <button *ngFor="let letter of alphabet" (click)="selectLetter(letter)" [class.bg-orange-500]="selectedLetter === letter" class="px-2 py-1 rounded text-white font-bold bg-stone-700 hover:bg-orange-500 transition-colors duration-150">
+      {{ letter }}
+    </button>
+    <button (click)="selectLetter(null)" [class.bg-orange-500]="!selectedLetter" class="px-2 py-1 rounded text-white font-bold bg-stone-700 hover:bg-orange-500 transition-colors duration-150">Todos</button>
   </div>
 </div>
