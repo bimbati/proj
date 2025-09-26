@@ -1,0 +1,8 @@
+<div *ngIf="character; else notFoundBlock" class="flex flex-col items-center justify-center min-h-[60vh]">
+	<img [src]="character.thumbnail.path + '.' + character.thumbnail.extension" alt="{{ character.name }}" class="w-32 h-32 object-cover rounded-full mb-4 border-4 border-orange-500 shadow" />
+	<h2 class="text-3xl font-Bungee text-orange-500 mb-2">{{ character.name }}</h2>
+	<p class="text-gray-300 text-lg mb-4">{{ character.description || 'Sem descrição.' }}</p>
+</div>
+<ng-template #notFoundBlock>
+	<div class="text-center text-red-500 text-2xl mt-12">Personagem não encontrado.</div>
+</ng-template>

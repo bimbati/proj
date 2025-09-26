@@ -16,6 +16,9 @@ import { Character } from '../../../shared/models/character.module';
 	imports: [CommonModule, RouterLink, UppercaseNamePipe, HighlightCardDirective, ReactiveFormsModule, AddCharacterComponent],
 })
 export class AllCharactersComponent implements OnInit {
+	// Lista local persistida
+	localCharacters: Character[] = [];
+	// Lista exibida (filtrada)
 	characters = signal<Character[]>([]);
 	loading = signal<boolean>(false);
 	error = signal<string | null>(null);
@@ -30,26 +33,47 @@ export class AllCharactersComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.fetchCharacters();
+		this.loadLocalCharacters();
+		if (this.localCharacters.length === 0) {
+			this.fetchCharacters();
+		} else {
+			this.filterCharacters(this.filterControl.value ?? '');
+		}
 	}
 
-	onAddCharacter(newChar: any) {
-		const id = Math.max(0, ...this.characters().map((c: any) => c.id || 0)) + 1;
-		this.characters.set([
-			{ ...newChar, id },
-			...this.characters()
-		]);
-		this.showAddModal = false;
-		this.filterControl.setValue(newChar.name); // já filtra pelo novo nome
+	loadLocalCharacters() {
+		const data = localStorage.getItem('characters');
+		this.localCharacters = data ? JSON.parse(data) : [];
 	}
+
+	saveLocalCharacters() {
+		localStorage.setItem('characters', JSON.stringify(this.localCharacters));
+	}
+
+		onAddCharacter(newChar: any) {
+			const id = Math.max(0, ...this.localCharacters.map((c: any) => c.id || 0)) + 1000000; // ids locais altos para evitar conflito
+			const character: Character = {
+				id,
+				name: newChar.name,
+				description: newChar.description || '',
+				thumbnail: newChar.thumbnail,
+				modified: new Date(),
+			};
+			this.localCharacters.unshift(character);
+			this.saveLocalCharacters();
+			this.filterCharacters(this.filterControl.value ?? '');
+			this.showAddModal = false;
+			this.filterControl.setValue(newChar.name); // já filtra pelo novo nome
+		}
 
 	fetchCharacters(offset: number = 0): void {
 		this.loading.set(true);
 		this.error.set(null);
 		this.api.getAllCharacters(offset).subscribe({
 			next: (response: any) => {
-				const results = response?.data?.results as Character[];
-				this.characters.set(results || []);
+				this.localCharacters = response?.data?.results || [];
+				this.saveLocalCharacters();
+				this.filterCharacters(this.filterControl.value ?? '');
 				this.loading.set(false);
 				this.showAddModal = false;
 			},
@@ -72,26 +96,39 @@ export class AllCharactersComponent implements OnInit {
 		}
 	}
 
-	filterCharacters(value: string): void {
-		const pageValue = typeof this.page === 'function' ? this.page() : 0;
-		if (!value || value.trim().length === 0) {
-			// Campo vazio: busca a lista completa da página
-			this.fetchCharacters(pageValue * 100);
-			return;
+		filterCharacters(value: string): void {
+			const all = [...this.localCharacters];
+			if (!value || value.trim().length === 0) {
+				this.characters.set(all);
+				return;
+			}
+			const filtered = all.filter(c => c.name.toLowerCase().includes(value.toLowerCase()));
+			if (filtered.length > 0) {
+				this.characters.set(filtered);
+				return;
+			}
+			// Se não encontrou localmente, busca na API e adiciona ao localStorage
+			this.loading.set(true);
+			this.api.getCharactersByName(value).subscribe({
+				next: (response: any) => {
+					const results = response?.data?.results || [];
+					if (results.length > 0) {
+						// Adiciona ao localStorage se não existir
+						results.forEach((char: any) => {
+							if (!this.localCharacters.some(c => c.id === char.id)) {
+								this.localCharacters.push(char);
+							}
+						});
+						this.saveLocalCharacters();
+					}
+					const updated = [...this.localCharacters].filter(c => c.name.toLowerCase().includes(value.toLowerCase()));
+					this.characters.set(updated);
+					this.loading.set(false);
+				},
+				error: () => {
+					this.error.set('Erro ao buscar personagem na API.');
+					this.loading.set(false);
+				}
+			});
 		}
-		// Campo preenchido: busca todos da página e filtra
-		this.loading.set(true);
-		this.error.set(null);
-		this.api.getCharactersByName(value).subscribe({
-			next: (response: any) => {
-				const results = response?.data?.results as Character[];
-				this.characters.set(results || []);
-				this.loading.set(false);
-			},
-			error: (err: any) => {
-				this.error.set('Erro ao buscar personagens.');
-				this.loading.set(false);
-			},
-		});
-	}
 }

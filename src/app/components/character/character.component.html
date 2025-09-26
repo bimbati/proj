@@ -2,6 +2,16 @@
   <h2 class="text-3xl font-Bungee text-orange-500 mb-6">Detalhes do Personagem</h2>
   <div class="w-full max-w-3xl bg-stone-900 rounded-lg shadow-lg p-8 border border-stone-700 flex flex-col items-center">
   <ng-container *ngIf="character">
+    <div *ngIf="character.id >= 1000000" class="flex gap-4 mb-4">
+      <button (click)="editMode = !editMode" class="px-4 py-2 rounded bg-blue-500 text-white font-bold">{{ editMode ? 'Cancelar' : 'Editar' }}</button>
+      <button (click)="deleteCharacter()" class="px-4 py-2 rounded bg-red-600 text-white font-bold">Excluir</button>
+    </div>
+    <form *ngIf="editMode" (ngSubmit)="saveEdit()" class="w-full max-w-md flex flex-col gap-3 mb-6">
+      <input [(ngModel)]="editName" name="editName" required class="px-4 py-2 rounded bg-stone-700 text-white" placeholder="Nome" />
+      <input [(ngModel)]="editThumbnail" name="editThumbnail" required class="px-4 py-2 rounded bg-stone-700 text-white" placeholder="URL da imagem" />
+      <textarea [(ngModel)]="editDescription" name="editDescription" class="px-4 py-2 rounded bg-stone-700 text-white" placeholder="Descrição"></textarea>
+      <button type="submit" class="px-4 py-2 rounded bg-green-600 text-white font-bold">Salvar</button>
+    </form>
       <img [src]="character.thumbnail.path + '.' + character.thumbnail.extension" alt="{{ character.name }}" class="w-24 h-24 object-cover rounded-full mb-3 border-4 border-orange-500 shadow" />
       <div class="font-Bungee text-orange-500 text-lg text-center mb-1">{{ character.name }}</div>
       <div class="text-xs text-gray-300 text-center">{{ character.description || 'Sem descrição.' }}</div>
