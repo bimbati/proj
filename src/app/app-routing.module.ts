@@ -16,13 +16,34 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       { path: '', component: CarrouselComponent },
-      { path: 'all-characters', component: AllCharactersComponent },
-      { path: 'all-comics', component: AllComicsComponent },
-      { path: 'all-series', component: AllSeriesComponent },
-  { path: 'character/:id', component: CharacterComponent },
-      { path: 'comics', component: ComicsComponent },
-      { path: 'series', component: SeriesComponent },
-      { path: 'search-character', component: SearchCharacterComponent },
+      {
+        path: 'all-characters',
+        loadChildren: () => import('./modules/all-characters/all-characters.module').then(m => m.AllCharactersModule)
+      },
+      {
+        path: 'all-comics',
+        loadChildren: () => import('./modules/all-comics/all-comics.module').then(m => m.AllComicsModule)
+      },
+      {
+        path: 'all-series',
+        loadChildren: () => import('./modules/all-series/all-series.module').then(m => m.AllSeriesModule)
+      },
+      {
+        path: 'character/:id',
+        loadChildren: () => import('./modules/character/character.module').then(m => m.CharacterModule)
+      },
+      {
+        path: 'comics',
+        loadChildren: () => import('./modules/comics/comics.module').then(m => m.ComicsModule)
+      },
+      {
+        path: 'series',
+        loadChildren: () => import('./modules/series/series.module').then(m => m.SeriesModule)
+      },
+      {
+        path: 'search-character',
+        loadChildren: () => import('./modules/search-character/search-character.module').then(m => m.SearchCharacterModule)
+      },
     ]
   }
 ];

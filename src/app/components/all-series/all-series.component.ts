@@ -1,5 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UppercaseNamePipe } from '../../shared/pipes/uppercase-name.pipe';
+import { HighlightCardDirective } from '../../shared/directives/highlight-card.directive';
 import { ApiRequestService } from '../../shared/services/api-request.service';
 // import { Serie } from '../../shared/models/series.module';
 interface Serie {
@@ -18,7 +20,7 @@ interface Serie {
   templateUrl: './all-series.component.html',
   styleUrl: './all-series.component.css',
   // providers: [ApiRequestService],
-  imports: [CommonModule],
+  imports: [CommonModule, UppercaseNamePipe, HighlightCardDirective],
 })
 export class AllSeriesComponent implements OnInit {
   series = signal<Serie[]>([]);

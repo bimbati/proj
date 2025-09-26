@@ -1,6 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { UppercaseNamePipe } from '../../shared/pipes/uppercase-name.pipe';
+import { HighlightCardDirective } from '../../shared/directives/highlight-card.directive';
 import { ApiRequestService } from '../../shared/services/api-request.service';
 import { Character } from '../../shared/models/character.module';
 
@@ -10,7 +12,7 @@ import { Character } from '../../shared/models/character.module';
   templateUrl: './all-characters.component.html',
   styleUrl: './all-characters.component.css',
   // providers: [ApiRequestService],
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, UppercaseNamePipe, HighlightCardDirective],
 })
 export class AllCharactersComponent implements OnInit {
   characters = signal<Character[]>([]);
