@@ -8,10 +8,14 @@ import { Character } from '../../shared/models/character.module';
   standalone: true,
   templateUrl: './search-character.component.html',
   styleUrl: './search-character.component.css',
-  providers: [ApiRequestService],
   imports: [CommonModule],
 })
 export class SearchCharacterComponent {
+  ngOnInit(): void {
+    if (this.searchTerm()) {
+      this.search();
+    }
+  }
   searchTerm = signal<string>('');
   character = signal<Character | null>(null);
   loading = signal<boolean>(false);

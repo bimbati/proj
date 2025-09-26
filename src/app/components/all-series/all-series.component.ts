@@ -17,7 +17,7 @@ interface Serie {
   standalone: true,
   templateUrl: './all-series.component.html',
   styleUrl: './all-series.component.css',
-  providers: [ApiRequestService],
+  // providers: [ApiRequestService],
   imports: [CommonModule],
 })
 export class AllSeriesComponent implements OnInit {

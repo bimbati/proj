@@ -9,7 +9,7 @@ import { Character } from '../../shared/models/character.module';
   standalone: true,
   templateUrl: './all-characters.component.html',
   styleUrl: './all-characters.component.css',
-  providers: [ApiRequestService],
+  // providers: [ApiRequestService],
   imports: [CommonModule, RouterLink],
 })
 export class AllCharactersComponent implements OnInit {

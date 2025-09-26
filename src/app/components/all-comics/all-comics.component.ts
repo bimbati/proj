@@ -8,7 +8,7 @@ import { Comic } from '../../shared/models/comics.module';
   standalone: true,
   templateUrl: './all-comics.component.html',
   styleUrl: './all-comics.component.css',
-  providers: [ApiRequestService],
+  // providers: [ApiRequestService],
   imports: [CommonModule],
 })
 export class AllComicsComponent implements OnInit {

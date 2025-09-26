@@ -17,10 +17,14 @@ interface Serie {
   standalone: true,
   templateUrl: './series.component.html',
   styleUrl: './series.component.css',
-  providers: [ApiRequestService],
   imports: [CommonModule],
 })
 export class SeriesComponent {
+  ngOnInit(): void {
+    if (this.serieId()) {
+      this.fetchSerie();
+    }
+  }
   serieId = signal<string>('');
   serie = signal<Serie | null>(null);
   loading = signal<boolean>(false);

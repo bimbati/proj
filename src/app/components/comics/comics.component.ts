@@ -8,10 +8,14 @@ import { Comic } from '../../shared/models/comics.module';
   standalone: true,
   templateUrl: './comics.component.html',
   styleUrl: './comics.component.css',
-  providers: [ApiRequestService],
   imports: [CommonModule],
 })
 export class ComicsComponent {
+  ngOnInit(): void {
+    if (this.comicId()) {
+      this.fetchComic();
+    }
+  }
   comicId = signal<string>('');
   comic = signal<Comic | null>(null);
   loading = signal<boolean>(false);
