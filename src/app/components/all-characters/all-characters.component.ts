@@ -15,6 +15,8 @@ export class AllCharactersComponent implements OnInit {
   characters = signal<Character[]>([]);
   loading = signal<boolean>(false);
   error = signal<string | null>(null);
+  page = signal<number>(0);
+  filter = signal<string>('');
 
   constructor(private api: ApiRequestService) {}
 
@@ -36,5 +38,40 @@ export class AllCharactersComponent implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  nextPage(): void {
+    this.page.set(this.page() + 1);
+    this.fetchCharacters(this.page() * 100);
+  }
+
+  prevPage(): void {
+    if (this.page() > 0) {
+      this.page.set(this.page() - 1);
+      this.fetchCharacters(this.page() * 100);
+    }
+  }
+
+  setFilter(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input?.value ?? '';
+    this.filter.set(value);
+    if (value.trim().length > 0) {
+      this.loading.set(true);
+      this.error.set(null);
+      this.api.getCharacterByName(value).subscribe({
+        next: (response: any) => {
+          const results = response?.data?.results as Character[];
+          this.characters.set(results || []);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          this.error.set('Erro ao buscar personagens.');
+          this.loading.set(false);
+        },
+      });
+    } else {
+      this.fetchCharacters(this.page() * 100);
+    }
   }
 }

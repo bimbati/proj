@@ -1,6 +1,39 @@
-<div class="w-full min-h-[60vh] flex flex-col items-center justify-center bg-gradient-to-b from-stone-900 to-stone-800 py-8">
-  <h2 class="text-3xl font-Bungee text-orange-500 mb-6">Carrousel Marvel</h2>
-  <div class="w-full max-w-5xl bg-stone-900 rounded-lg shadow-lg p-8 border border-stone-700 flex justify-center items-center">
-    <!-- Conteúdo do carrousel aqui -->
+<div class="flex items-center mb-12 flex-col lg:mt-5 min-h-[90vh]">
+  <div class="flex justify-center sm:flex-row flex-wrap gap-6 max-w-7xl lg:px-9 lg:gap-x-28 xl:px-4 xl:gap-x-8 my-5 md:gap-x-20">
+    <ng-container *ngFor="let character of characters(); let idx = index">
+      <app-character
+        [character]="character"
+        [characterComics]="charactersComics()[idx]"
+        [characterSeries]="charactersSeries()[idx]"
+        [showDescription]="true"
+        [showComicsAndSeries]="true"
+      />
+    </ng-container>
   </div>
+  <div class="flex flex-wrap gap-2 items-center w-[90%] justify-evenly pt-8 max-w-7xl my-5">
+    <a [routerLink]="['all-characters']" class="w-52 bg-red-500 text-white rounded-xl text-center py-3 hover:bg-red-700">More Characters</a>
+    <a [routerLink]="['all-comics']" class="w-52 bg-red-500 text-white rounded-xl text-center py-3 hover:bg-red-700">Comics</a>
+    <a [routerLink]="['all-series']" class="w-52 bg-red-500 text-white rounded-xl text-center py-3 hover:bg-red-700">Series</a>
+  </div>
+  <h2 class="font-bold text-2xl uppercase text-center p-4 sm:text-3xl sm:pt-8 text-orange-500">Search a Character</h2>
+  <div class="flex rounded-md bg-red-500">
+    <ng-container *ngIf="showInput()">
+      <div class="w-[85vw] max-w-[240px] p-2">
+        <input id="input" type="text" class="focus:outline-none w-full bg-red-500 text-white placeholder:text-white" placeholder="Search..." value="" (change)="inputChange($event)" />
+      </div>
+    </ng-container>
+    <button class="px-3 py-2 focus:outline-none" (click)="displayInput()">
+      <i class="fas fa-search text-white"></i>
+    </button>
+  </div>
+  <ng-container *ngIf="showCharacter()">
+    <app-character
+      [character]="characterSearched()"
+      [showDescription]="true"
+      [showComicsAndSeries]="true"
+      [characterComics]="comicsCharacterSearched()"
+      [characterSeries]="seriesCharacterSearched()"
+      class="mt-8"
+    />
+  </ng-container>
 </div>
