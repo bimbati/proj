@@ -1,8 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UppercaseNamePipe } from '../../shared/pipes/uppercase-name.pipe';
-import { HighlightCardDirective } from '../../shared/directives/highlight-card.directive';
-import { ApiRequestService } from '../../shared/services/api-request.service';
+import { UppercaseNamePipe } from '../../../shared/pipes/uppercase-name.pipe';
+import { HighlightCardDirective } from '../../../shared/directives/highlight-card.directive';
+import { ApiRequestService } from '../../../shared/services/api-request.service';
 // import { Serie } from '../../shared/models/series.module';
 interface Serie {
   id: number;

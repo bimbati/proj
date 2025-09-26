@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SearchCharacterComponent } from './search-character.component';
-import { ApiRequestService } from '../../shared/services/api-request.service';
+import { ApiRequestService } from '../../../shared/services/api-request.service';
 import { of } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -17,7 +17,7 @@ describe('SearchCharacterComponent', () => {
       ]
     }).compileComponents();
     component = TestBed.createComponent(SearchCharacterComponent).componentInstance;
-    component.searchTerm.set('Hero');
+  component.searchControl.setValue('Hero');
   });
 
   it('should create', () => {

@@ -1,9 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UppercaseNamePipe } from '../../shared/pipes/uppercase-name.pipe';
-import { HighlightCardDirective } from '../../shared/directives/highlight-card.directive';
-import { ApiRequestService } from '../../shared/services/api-request.service';
-import { Comic } from '../../shared/models/comics.module';
+import { UppercaseNamePipe } from '../../../shared/pipes/uppercase-name.pipe';
+import { HighlightCardDirective } from '../../../shared/directives/highlight-card.directive';
+import { ApiRequestService } from '../../../shared/services/api-request.service';
+import { Comic } from '../../../shared/models/comics.module';
 
 @Component({
   selector: 'app-all-comics',

@@ -2,13 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './shared/layout/layout.component';
 import { CarrouselComponent } from './components/carrousel/carrousel.component';
-import { AllCharactersComponent } from './components/all-characters/all-characters.component';
-import { AllComicsComponent } from './components/all-comics/all-comics.component';
-import { AllSeriesComponent } from './components/all-series/all-series.component';
+import { AllCharactersComponent } from './components/character/all-characters/all-characters.component';
 import { CharacterComponent } from './components/character/character.component';
 import { ComicsComponent } from './components/comics/comics.component';
 import { SeriesComponent } from './components/series/series.component';
-import { SearchCharacterComponent } from './components/search-character/search-character.component';
 
 export const routes: Routes = [
   {

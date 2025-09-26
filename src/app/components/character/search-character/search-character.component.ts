@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ApiRequestService } from '../../shared/services/api-request.service';
-import { Character } from '../../shared/models/character.module';
+import { ApiRequestService } from '../../../shared/services/api-request.service';
+import { Character } from '../../../shared/models/character.module';
 
 @Component({
   selector: 'app-search-character',
